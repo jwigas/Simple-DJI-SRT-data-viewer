@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	<title>Custom Icons Tutorial - Leaflet</title>
+	
+	<link rel="shortcut icon" type="image/x-icon" href="docs/images/favicon.ico" />
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+	<script src="DJISRTParser.js"></script>
+	<script src="DJI_srt_reader.js"></script>
+
+	<style>
+		html, body {
+			display: grid;
+  			grid-column-gap: 10px;
+			grid-template-areas: "inputdiv"
+								"outputdiv"
+								"outputdiv"
+								"outputdiv"
+			;
+		}
+
+		.inputdiv{
+			display: grid;
+		}
+
+		.leaflet-container {
+			align-content: center;
+			height: 600px;
+			width: 100%;
+	</style>
+
+	
+</head>
+<body>
+<div class="inputdiv">	
+	<input type="file" onchange="readFile(this)">
+
+	<script>
+			function readFile(input) {
+			let file = input.files[0];
+
+			let reader = new FileReader();
+
+			reader.readAsBinaryString(file);
+			//localStorage.filename=reader.result;
+	
+			reader.onload = function() {
+				//console.log(reader.result);
+				localStorage.filename=reader.result;
+			};
+
+			reader.onerror = function() {
+				console.log(reader.error);
+			};
+	
+			}
+			
+	</script>
+</div>
+<div class="outputdiv" id='map'> TES
+</div>
+
+<script>
+	//find center value
+	x = (Math.max(...data.map(o => o.latitude)) + Math.min(...data.map(o => o.latitude)))/2;
+	y = (Math.max(...data.map(o => o.longitude)) + Math.min(...data.map(o => o.longitude)))/2;
+	var map = L.map('map').setView([x,y], 17);
+
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+		attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	}).addTo(map);
+
+	//L.marker([data[0].latitude,data[0].longitude]).bindPopup(String(data[0].altitude)).addTo(map);
+
+	data.forEach(function(hasil, index){
+		L.circleMarker([hasil.latitude,hasil.longitude]).bindPopup(String(hasil.altitude)).addTo(map);
+	})
+
+
+</script>
+
+
+
+</body>
+</html>
